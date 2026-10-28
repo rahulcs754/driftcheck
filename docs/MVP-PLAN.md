@@ -19,6 +19,9 @@
 ## Stack
 TypeScript (Node 22, ESM), postcss for CSS parsing, @babel/parser for TSX class strings, culori for color math, commander, vitest, @anthropic-ai/sdk (`claude-opus-5-5`) optional.
 
+## Status (first MVP PR)
+Done: steps 1–5 below (Tailwind v4 + CSS vars, Figma variables + fixture, token diff, PR scan + suggestions, Action with one updated comment). Not yet: Tailwind v3 config, `--ai`, demo app + GIF.
+
 ## Build order (2–3 weeks)
 1. Code token reader (Tailwind v4 + CSS vars) + tests
 2. Figma variables reader (with a saved JSON fixture so tests don't need the API)

@@ -1,0 +1,183 @@
+{
+  "status": 200,
+  "error": false,
+  "meta": {
+    "variables": {
+      "V:1": {
+        "id": "V:1",
+        "name": "color/brand/500",
+        "resolvedType": "COLOR",
+        "variableCollectionId": "VariableCollectionId:1:0",
+        "valuesByMode": {
+          "1:0": {
+            "r": 0.0784313725490196,
+            "g": 0.5686274509803921,
+            "b": 0.6078431372549019,
+            "a": 1
+          }
+        },
+        "remote": false
+      },
+      "V:2": {
+        "id": "V:2",
+        "name": "color/brand/600",
+        "resolvedType": "COLOR",
+        "variableCollectionId": "VariableCollectionId:1:0",
+        "valuesByMode": {
+          "1:0": {
+            "r": 0.058823529411764705,
+            "g": 0.43137254901960786,
+            "b": 0.4666666666666667,
+            "a": 1
+          }
+        },
+        "remote": false
+      },
+      "V:3": {
+        "id": "V:3",
+        "name": "color/gray/100",
+        "resolvedType": "COLOR",
+        "variableCollectionId": "VariableCollectionId:1:0",
+        "valuesByMode": {
+          "1:0": {
+            "r": 0.9529411764705882,
+            "g": 0.9568627450980393,
+            "b": 0.9647058823529412,
+            "a": 1
+          }
+        },
+        "remote": false
+      },
+      "V:4": {
+        "id": "V:4",
+        "name": "color/gray/900",
+        "resolvedType": "COLOR",
+        "variableCollectionId": "VariableCollectionId:1:0",
+        "valuesByMode": {
+          "1:0": {
+            "r": 0.06666666666666667,
+            "g": 0.09411764705882353,
+            "b": 0.15294117647058825,
+            "a": 1
+          }
+        },
+        "remote": false
+      },
+      "V:5": {
+        "id": "V:5",
+        "name": "color/surface",
+        "resolvedType": "COLOR",
+        "variableCollectionId": "VariableCollectionId:2:0",
+        "valuesByMode": {
+          "2:0": {
+            "type": "VARIABLE_ALIAS",
+            "id": "V:3"
+          },
+          "2:1": {
+            "type": "VARIABLE_ALIAS",
+            "id": "V:4"
+          }
+        },
+        "remote": false
+      },
+      "V:6": {
+        "id": "V:6",
+        "name": "color/accent",
+        "resolvedType": "COLOR",
+        "variableCollectionId": "VariableCollectionId:1:0",
+        "valuesByMode": {
+          "1:0": {
+            "r": 0.48627450980392156,
+            "g": 0.22745098039215686,
+            "b": 0.9294117647058824,
+            "a": 1
+          }
+        },
+        "remote": false
+      },
+      "V:7": {
+        "id": "V:7",
+        "name": "color/success",
+        "resolvedType": "COLOR",
+        "variableCollectionId": "VariableCollectionId:1:0",
+        "valuesByMode": {
+          "1:0": {
+            "r": 0.08627450980392157,
+            "g": 0.6392156862745098,
+            "b": 0.2901960784313726,
+            "a": 1
+          }
+        },
+        "remote": false
+      },
+      "V:8": {
+        "id": "V:8",
+        "name": "radius/md",
+        "resolvedType": "FLOAT",
+        "variableCollectionId": "VariableCollectionId:1:0",
+        "valuesByMode": {
+          "1:0": 8
+        },
+        "remote": false
+      },
+      "V:9": {
+        "id": "V:9",
+        "name": "text/sm",
+        "resolvedType": "FLOAT",
+        "variableCollectionId": "VariableCollectionId:1:0",
+        "valuesByMode": {
+          "1:0": 14
+        },
+        "remote": false
+      },
+      "V:10": {
+        "id": "V:10",
+        "name": "spacing/card",
+        "resolvedType": "FLOAT",
+        "variableCollectionId": "VariableCollectionId:1:0",
+        "valuesByMode": {
+          "1:0": 16
+        },
+        "remote": false
+      },
+      "V:11": {
+        "id": "V:11",
+        "name": "opacity/disabled",
+        "resolvedType": "FLOAT",
+        "variableCollectionId": "VariableCollectionId:1:0",
+        "valuesByMode": {
+          "1:0": 0.5
+        },
+        "remote": false
+      }
+    },
+    "variableCollections": {
+      "VariableCollectionId:1:0": {
+        "id": "VariableCollectionId:1:0",
+        "name": "Primitives",
+        "defaultModeId": "1:0",
+        "modes": [
+          {
+            "modeId": "1:0",
+            "name": "Value"
+          }
+        ]
+      },
+      "VariableCollectionId:2:0": {
+        "id": "VariableCollectionId:2:0",
+        "name": "Semantic",
+        "defaultModeId": "2:0",
+        "modes": [
+          {
+            "modeId": "2:0",
+            "name": "Light"
+          },
+          {
+            "modeId": "2:1",
+            "name": "Dark"
+          }
+        ]
+      }
+    }
+  }
+}
