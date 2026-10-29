@@ -10,7 +10,7 @@ A PR bot that catches **design drift**: places where your code stops matching th
 - It takes an average of 3.7 weeks from design spec to a shipped component.
 
 ## What it does
-- Reads your code tokens from Tailwind v4 `@theme` blocks and `:root` CSS variables.
+- Reads your code tokens from Tailwind v4 `@theme` blocks, `:root` CSS variables, or a Tailwind v3 `tailwind.config.js` (`theme` and `theme.extend`).
 - Reads Figma variables (REST API or a saved JSON) and diffs them with code: missing tokens and value mismatches (colors compared in OKLab ΔE).
 - Scans **only the lines a PR adds** for hard-coded values: hex/rgb/hsl/oklch colors, `p-[13px]`, `bg-[#0f6e77]`, `rounded-[8px]`, `text-[14px]`, `padding: 16px`, `style={{ marginTop: 6 }}`.
 - Suggests the nearest token (`bg-brand-600`, `var(--spacing-card)`, `p-3`) with its distance.
@@ -50,9 +50,11 @@ Try it on the bundled sample:
 npm run dev -- pr --css fixtures/css/globals.css --diff fixtures/diff/sample.diff --figma-json fixtures/figma/sample.json
 ```
 
-Options can live in `driftcheck.config.json` (see [examples/driftcheck.config.json](examples/driftcheck.config.json)): `css`, `figma.fileKey`, `figma.mode`, `ignore`, `maxColorDistance`, `failOn`.
+Tailwind v3: pass `--tailwind tailwind.config.js` (found automatically at the repo root). If the config imports plugins, run `npm ci` in your workflow before DriftCheck.
+
+Options can live in `driftcheck.config.json` (see [examples/driftcheck.config.json](examples/driftcheck.config.json)): `css`, `tailwind`, `figma.fileKey`, `figma.mode`, `ignore`, `maxColorDistance`, `failOn`.
 
 ## Not in the MVP yet
-- Tailwind v3 `tailwind.config.js` themes and Tokens Studio JSON
+- `tailwind.config.ts` and Tokens Studio JSON
 - `--ai` tie-breaker with Claude
 - Auto-fix PRs (MVP only reports)
