@@ -1,0 +1,31 @@
+diff --git a/src/components/Button.tsx b/src/components/Button.tsx
+index 1111111..2222222 100644
+--- a/src/components/Button.tsx
++++ b/src/components/Button.tsx
+@@ -10,2 +10,4 @@ export function Button() {
+   return (
+-    <button className="bg-brand-600 p-3">
++    <button className="bg-[#0f6e77] hover:bg-[#14919c] p-[13px] rounded-[8px] text-[14px]">
++      <span style={{ color: "#3B82F6", marginTop: 6 }}>Go</span>
+     </button>
+diff --git a/src/components/Card.module.css b/src/components/Card.module.css
+new file mode 100644
+--- /dev/null
++++ b/src/components/Card.module.css
+@@ -0,0 +1,6 @@
++.card {
++  background: rgb(243 244 246);
++  padding: 16px 24px;
++  border: 1px solid #e11d48;
++  color: var(--color-accent, #6d28d9);
++}
+diff --git a/src/app/globals.css b/src/app/globals.css
+--- a/src/app/globals.css
++++ b/src/app/globals.css
+@@ -5,0 +6 @@
++  --color-new: #ff0000;
+diff --git a/src/components/Button.test.tsx b/src/components/Button.test.tsx
+--- a/src/components/Button.test.tsx
++++ b/src/components/Button.test.tsx
+@@ -1,0 +2 @@
++expect(el).toHaveStyle({ color: "#0f6e77" });
