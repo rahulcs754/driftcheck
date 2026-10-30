@@ -9,12 +9,14 @@ import { parseAddedLines } from "./scan/diff.js";
 import { scanLines } from "./scan/scan.js";
 import { readCssTokens } from "./tokens/css.js";
 import { diffTokens } from "./tokens/diff.js";
+import { loadTailwindConfig, readTailwindTokens } from "./tokens/tailwind.js";
 import { fetchFigmaVariables, type FigmaVariablesResponse, readFigmaTokens } from "./tokens/figma.js";
 import type { Token } from "./types.js";
 
 interface CommonOpts {
   config?: string;
   css?: string[];
+  tailwind?: string;
   figma?: string;
   figmaJson?: string;
   mode?: string;
@@ -24,19 +26,30 @@ interface CommonOpts {
 function resolveConfig(opts: CommonOpts): Config {
   const config = loadConfig(opts.config);
   if (opts.css?.length) config.css = opts.css;
+  if (opts.tailwind) config.tailwind = opts.tailwind;
   if (opts.figma || opts.figmaJson || opts.mode) {
     config.figma = { ...config.figma, fileKey: opts.figma ?? config.figma?.fileKey, json: opts.figmaJson ?? config.figma?.json, mode: opts.mode ?? config.figma?.mode };
   }
   return config;
 }
 
-function codeTokens(config: Config): { tokens: Token[]; spacingUnitPx?: number } {
+async function codeTokens(config: Config): Promise<{ tokens: Token[]; spacingUnitPx?: number }> {
   const tokens: Token[] = [];
   let spacingUnitPx: number | undefined;
   for (const file of config.css) {
     const r = readCssTokens(readFileSync(file, "utf8"));
     tokens.push(...r.tokens);
     spacingUnitPx ??= r.spacingUnitPx;
+  }
+  if (config.tailwind) {
+    try {
+      tokens.push(...readTailwindTokens(await loadTailwindConfig(config.tailwind)));
+      // Tailwind v3's default spacing scale is 0.25rem steps (`p-3` = 12px).
+      spacingUnitPx ??= 4;
+    } catch (err) {
+      // Usually a plugin import that needs the app's node_modules; run `npm ci` before DriftCheck.
+      console.warn(`driftcheck: could not load ${config.tailwind}, skipping it: ${err instanceof Error ? err.message : String(err)}`);
+    }
   }
   return { tokens, spacingUnitPx };
 }
@@ -61,6 +74,7 @@ const common = (cmd: Command) =>
   cmd
     .option("-c, --config <file>", "config file", "driftcheck.config.json")
     .option("--css <files...>", "CSS files with code tokens (Tailwind v4 @theme or :root)")
+    .option("--tailwind <file>", "Tailwind v3 config (tailwind.config.js)")
     .option("--figma <fileKey>", "Figma file key (needs FIGMA_TOKEN)")
     .option("--figma-json <file>", "saved Figma variables API response")
     .option("--mode <name>", "Figma mode, e.g. Light")
@@ -70,7 +84,7 @@ common(program.command("tokens").description("Compare Figma variables with code 
   const config = resolveConfig(opts);
   const figma = await figmaTokens(config);
   if (!figma) throw new Error("Pass --figma <fileKey> or --figma-json <file>, or set figma in driftcheck.config.json.");
-  const diff = diffTokens(figma, codeTokens(config).tokens);
+  const diff = diffTokens(figma, (await codeTokens(config)).tokens);
   console.log(opts.json ? JSON.stringify(diff, null, 2) : tokenDiffSection(diff).replace(/\*\*/g, ""));
   if (diff.mismatched.length || diff.missingInCode.length) process.exitCode = 1;
 });
@@ -88,11 +102,11 @@ common(program.command("pr").description("Scan the lines a PR adds for hard-code
       ? readFileSync(opts.diff === "-" ? 0 : opts.diff, "utf8")
       : execFileSync("git", ["diff", "--no-color", "--no-ext-diff", "-U0", `${base}...HEAD`], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 
-    const { tokens, spacingUnitPx } = codeTokens(config);
+    const { tokens, spacingUnitPx } = await codeTokens(config);
     const figma = await figmaTokens(config);
     const findings = scanLines(parseAddedLines(diffText), tokens, {
       ignore: config.ignore,
-      tokenFiles: config.css,
+      tokenFiles: config.tailwind ? [...config.css, config.tailwind] : config.css,
       maxColorDistance: config.maxColorDistance,
       spacingUnitPx,
     });

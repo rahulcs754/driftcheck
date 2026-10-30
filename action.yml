@@ -7,6 +7,9 @@ inputs:
   css:
     description: Space-separated CSS files with code tokens (Tailwind v4 @theme or :root). Defaults to driftcheck.config.json or common globals.css paths.
     required: false
+  tailwind:
+    description: Tailwind v3 config file (tailwind.config.js). Auto-detected when it sits at the repo root.
+    required: false
   figma-file-key:
     description: Figma file key. Needs the FIGMA_TOKEN env var. Adds a Figma vs code token table to the comment.
     required: false
@@ -34,12 +37,14 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         INPUT_CSS: ${{ inputs.css }}
+        INPUT_TAILWIND: ${{ inputs.tailwind }}
         INPUT_FIGMA_FILE_KEY: ${{ inputs.figma-file-key }}
         INPUT_FIGMA_JSON: ${{ inputs.figma-json }}
         INPUT_FAIL_ON: ${{ inputs.fail-on }}
       run: |
         args=(pr --comment)
         if [ -n "$INPUT_CSS" ]; then read -ra css <<< "$INPUT_CSS"; args+=(--css "${css[@]}"); fi
+        if [ -n "$INPUT_TAILWIND" ]; then args+=(--tailwind "$INPUT_TAILWIND"); fi
         if [ -n "$INPUT_FIGMA_FILE_KEY" ]; then args+=(--figma "$INPUT_FIGMA_FILE_KEY"); fi
         if [ -n "$INPUT_FIGMA_JSON" ]; then args+=(--figma-json "$INPUT_FIGMA_JSON"); fi
         if [ -n "$INPUT_FAIL_ON" ]; then args+=(--fail-on "$INPUT_FAIL_ON"); fi
