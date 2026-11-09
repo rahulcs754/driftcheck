@@ -1,0 +1,22 @@
+# Copy to .github/workflows/driftcheck.yml in your app repo.
+name: DriftCheck
+on: pull_request
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # needed to diff against the PR base
+      - uses: rahulcs754/driftcheck@main
+        with:
+          css: src/app/globals.css
+          # figma-file-key: AbC123xyz   # optional, needs secrets.FIGMA_TOKEN below
+          # fail-on: 0                  # optional, fail when any drift is found
+        env:
+          FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}

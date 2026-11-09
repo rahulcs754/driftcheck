@@ -1,0 +1,7 @@
+{
+  "css": ["src/app/globals.css"],
+  "figma": { "fileKey": "AbC123xyz", "mode": "Light" },
+  "ignore": ["src/legacy/**"],
+  "maxColorDistance": 3,
+  "failOn": null
+}

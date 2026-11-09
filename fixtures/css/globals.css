@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@theme {
+  --color-*: initial;
+  --color-brand-500: #14919b;
+  --color-brand-600: #0f6e77;
+  --color-gray-100: #f3f4f6;
+  --color-surface: var(--color-gray-100);
+  --color-accent: #6d28d9;
+  --color-legacy-blue: #3b82f6;
+  --radius-md: 0.5rem;
+  --text-sm: 0.875rem;
+  --spacing-card: 1rem;
+}
+
+:root {
+  --header-height: 64px;
+}

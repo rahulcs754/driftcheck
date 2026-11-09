@@ -1,0 +1,46 @@
+name: DriftCheck
+description: Flag hard-coded colors, spacing, radius and font sizes in PRs and suggest the matching design token.
+branding:
+  icon: droplet
+  color: purple
+inputs:
+  css:
+    description: Space-separated CSS files with code tokens (Tailwind v4 @theme or :root). Defaults to driftcheck.config.json or common globals.css paths.
+    required: false
+  figma-file-key:
+    description: Figma file key. Needs the FIGMA_TOKEN env var. Adds a Figma vs code token table to the comment.
+    required: false
+  figma-json:
+    description: Path to a saved Figma variables API response, used instead of the API.
+    required: false
+  fail-on:
+    description: Fail the check when findings are more than this number. Empty never fails.
+    required: false
+  github-token:
+    description: Token used to post the PR comment.
+    default: ${{ github.token }}
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+    - name: Build DriftCheck
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      run: npm ci --no-audit --no-fund && npm run build
+    - name: Scan PR
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        INPUT_CSS: ${{ inputs.css }}
+        INPUT_FIGMA_FILE_KEY: ${{ inputs.figma-file-key }}
+        INPUT_FIGMA_JSON: ${{ inputs.figma-json }}
+        INPUT_FAIL_ON: ${{ inputs.fail-on }}
+      run: |
+        args=(pr --comment)
+        if [ -n "$INPUT_CSS" ]; then read -ra css <<< "$INPUT_CSS"; args+=(--css "${css[@]}"); fi
+        if [ -n "$INPUT_FIGMA_FILE_KEY" ]; then args+=(--figma "$INPUT_FIGMA_FILE_KEY"); fi
+        if [ -n "$INPUT_FIGMA_JSON" ]; then args+=(--figma-json "$INPUT_FIGMA_JSON"); fi
+        if [ -n "$INPUT_FAIL_ON" ]; then args+=(--fail-on "$INPUT_FAIL_ON"); fi
+        node "${{ github.action_path }}/dist/cli.js" "${args[@]}"
