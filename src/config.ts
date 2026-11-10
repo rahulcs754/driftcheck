@@ -3,6 +3,8 @@ import { existsSync, readFileSync } from "node:fs";
 export interface Config {
   /** CSS files that hold the code tokens (Tailwind v4 `@theme` or `:root`). */
   css: string[];
+  /** Tailwind v3 config (`tailwind.config.js`); its theme colors, spacing, radius and font sizes become tokens. */
+  tailwind?: string;
   figma?: {
     /** Figma file key; needs the `FIGMA_TOKEN` env var. */
     fileKey?: string;
@@ -19,6 +21,7 @@ export interface Config {
 
 export const CONFIG_FILE = "driftcheck.config.json";
 
+const DEFAULT_TAILWIND = ["tailwind.config.js", "tailwind.config.cjs", "tailwind.config.mjs"];
 const DEFAULT_CSS = ["app/globals.css", "src/app/globals.css", "src/index.css", "src/styles/globals.css", "styles/globals.css"];
 
 export const DEFAULTS: Config = {
@@ -32,5 +35,6 @@ export function loadConfig(path = CONFIG_FILE): Config {
   const user = existsSync(path) ? (JSON.parse(readFileSync(path, "utf8")) as Partial<Config>) : {};
   const config: Config = { ...DEFAULTS, ...user, ignore: [...DEFAULTS.ignore, ...(user.ignore ?? [])] };
   if (config.css.length === 0) config.css = DEFAULT_CSS.filter((f) => existsSync(f));
+  config.tailwind ??= DEFAULT_TAILWIND.find((f) => existsSync(f));
   return config;
 }
